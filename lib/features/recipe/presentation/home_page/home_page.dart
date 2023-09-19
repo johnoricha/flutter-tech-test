@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
 import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_cubit.dart';
 import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_state.dart';
+import 'package:tech_task/features/recipe/utils/state_status.dart';
 import 'package:tech_task/features/recipe/utils/string_formatter.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,68 +46,84 @@ class _HomePageState extends State<HomePage> {
       bloc: _recipesCubit,
       listener: (context, state) {},
       builder: (context, state) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Select lunch date'),
-              InkWell(
-                onTap: () {
-                  _selectDate(context);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 14),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          StringFormatter.convertDateFormat(
-                              value: selectedDate.toString(),
-                              inputDateFormat: 'yyyy-MM-dd',
-                              outputDateFormat: 'yyyy-MM-dd'),
-                        ),
-                        Icon(Icons.date_range)
-                      ],
+          appBar: AppBar(
+            title: Text(widget.title),
+          ),
+          body: buildHomePageBody(context, state)),
+    );
+  }
+
+  Widget buildHomePageBody(BuildContext context, RecipesState state) {
+    if (state.getIngredientsStateStatus == StateStatus.loadingState) {
+      return Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          Text('Getting ingredients...')
+        ],
+      ));
+    }
+
+    if (state.getIngredientsStateStatus == StateStatus.failedState) {
+      return Center(child: Text('error'));
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Select lunch date'),
+          InkWell(
+            onTap: () {
+              _selectDate(context);
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      StringFormatter.convertDateFormat(
+                          value: selectedDate.toString(),
+                          inputDateFormat: 'yyyy-MM-dd',
+                          outputDateFormat: 'yyyy-MM-dd'),
                     ),
-                  ),
+                    Icon(Icons.date_range)
+                  ],
                 ),
               ),
-              Text('Select ingredients'),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: state.ingredients?.length,
-                    itemBuilder: (context, index) {
-                      final ingredient = state.ingredients?[index];
-
-                      return AppListTileCheckBox(
-                        title: ingredient?.title ?? '',
-                        subTitle: ingredient?.useBy ?? '',
-                        isChecked: ingredient?.isChecked ?? false,
-                        onChanged: (checked) {
-                          _recipesCubit.toggleIngredientChecked(
-                              index, checked ?? false);
-                        },
-                      );
-                    }),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                width: MediaQuery.of(context).size.width,
-                child:
-                    OutlinedButton(onPressed: () {}, child: Text('Get Recipe')),
-              )
-            ],
+            ),
           ),
-        ),
+          Text('Select ingredients'),
+          Expanded(
+            child: ListView.builder(
+                itemCount: state.ingredients?.length,
+                itemBuilder: (context, index) {
+                  final ingredient = state.ingredients?[index];
+
+                  return AppListTileCheckBox(
+                    title: ingredient?.title ?? '',
+                    subTitle: ingredient?.useBy ?? '',
+                    isChecked: ingredient?.isChecked ?? false,
+                    onChanged: (checked) {
+                      _recipesCubit.toggleIngredientChecked(
+                          index, checked ?? false);
+                    },
+                  );
+                }),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            width: MediaQuery.of(context).size.width,
+            child: OutlinedButton(onPressed: () {}, child: Text('Get Recipe')),
+          )
+        ],
       ),
     );
   }

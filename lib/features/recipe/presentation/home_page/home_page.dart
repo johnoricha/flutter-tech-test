@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_task/features/recipe/di/app_initializer.dart';
+import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_cubit.dart';
+import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_state.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -10,44 +14,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  late RecipesCubit _recipesCubit;
 
   @override
   void initState() {
-
+    _recipesCubit = AppInitializer.getIt<RecipesCubit>();
+    _recipesCubit.getIngredients();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          ],
+    return BlocConsumer<RecipesCubit, RecipesState>(
+      bloc: _recipesCubit,
+      listener: (context, state) {},
+      builder: (context, state) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: ListView.builder(
+                    itemCount: state.ingredients?.length,
+                    itemBuilder: (context, index) {
+                      return Text(state.ingredients?[index].title ?? '');
+                    }),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

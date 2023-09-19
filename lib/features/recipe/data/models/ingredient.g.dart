@@ -8,11 +8,11 @@ part of 'ingredient.dart';
 
 Ingredient _$IngredientFromJson(Map<String, dynamic> json) => Ingredient(
       title: json['title'] as String?,
-      useBy: json['useBy'] as String?,
+      useBy: json['use-by'] as String?,
     );
 
 Map<String, dynamic> _$IngredientToJson(Ingredient instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'useBy': instance.useBy,
+      'use-by': instance.useBy,
     };

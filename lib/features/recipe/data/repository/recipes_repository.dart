@@ -6,14 +6,17 @@ import 'package:logger/logger.dart';
 import 'package:retrofit/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:tech_task/features/recipe/data/api_service/recipes_service.dart';
+
 Logger logger = Logger(printer: PrettyPrinter(lineLength: 100000));
 
 class RecipesRepository {
   late RecipesService _client;
   final _dio = Dio();
-  static const baseUrl = 'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev';
+  static const baseUrl =
+      'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev';
 
-  UbxRepository() {
+  RecipesRepository() {
+    print('repo constructor called');
     _dio.options = BaseOptions(validateStatus: (val) => true);
     _dio.options.headers['Content-Type'] = 'application/json';
     _dio.options.headers['Accept'] = 'application/json';
@@ -28,7 +31,7 @@ class RecipesRepository {
     _client = RecipesService(_dio, baseUrl: baseUrl);
   }
 
-  Future<Map<String, dynamic>> getIngredients() async {
+  Future<List<dynamic>> getIngredients() async {
     return ErrorHandler.networkErrorHandler(() {
       return _client.getIngredients();
     });
@@ -36,31 +39,29 @@ class RecipesRepository {
 }
 
 mixin ErrorHandler {
-  static Future<Map<String, dynamic>> networkErrorHandler(
+  static Future<List<dynamic>> networkErrorHandler(
       Function functions) async {
     try {
-      final res = await functions() as HttpResponse<dynamic>?;
+      final HttpResponse<dynamic>? res = await functions();
 
       if (responseIsOk(res?.response.statusCode ?? 401)) {
-        return res?.response.data as Map<String, dynamic>;
+        return res?.response.data as List<dynamic>;
       } else if ((res?.response.statusCode ?? 401) == 401) {
-        return {
-          'status': 401,
+        return List.generate(1, (index) {
+          return {'status': 401,
           'message': 'Unauthorized',
-          'errorData': res?.response.data
-        };
+          'errorData': res?.response.data};
+        });
       } else if ((res?.response.statusCode ?? 400) == 400) {
-        return {
-          'status': 400,
+        return List.generate(1, (index) => {'status': 400,
           'message': 'Bad request',
-          'errorData': res?.response.data
-        };
+          'errorData': res?.response.data});
       } else {
-        return {
-          'status': 401,
-          'message': 'Unauthorized',
-          'errorData': res?.response.data
-        };
+        return List.generate(1, (index) {
+          return {'status': 401,
+            'message': 'Unauthorized',
+            'errorData': res?.response.data};
+        });
       }
     } on SocketException catch (e) {
       logger.d(e.toString());

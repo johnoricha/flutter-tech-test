@@ -47,6 +47,7 @@ class AppInitializer {
   }
 
   static void _initRepos() {
+    print('init repos called');
     getIt.registerLazySingleton(() => RecipesRepository());
   }
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:tech_task/features/recipe/cubits/models/ingredient.dart';
+import 'package:tech_task/features/recipe/cubits/recipes_cubit.dart';
+import 'package:tech_task/features/recipe/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_cubit.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
-import 'package:tech_task/features/recipe/presentation/recipes_page/recipes_page.dart';
+import 'package:tech_task/features/recipe/ui/recipes_page/recipes_page.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 import 'package:tech_task/features/recipe/utils/string_formatter.dart';
 
@@ -167,7 +168,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                         SnackBar(content: Text('Please select ingredients')));
                   }
                 },
-                child: Text('Get Recipe')),
+                child: Text('Get Recipes')),
           )
         ],
       ),

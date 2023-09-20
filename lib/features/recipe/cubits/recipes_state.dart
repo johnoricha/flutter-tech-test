@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:tech_task/features/recipe/cubits/models/ingredient.dart';
+import 'package:tech_task/features/recipe/cubits/models/recipe.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 
 class RecipesState extends Equatable {
@@ -41,37 +43,6 @@ class RecipesState extends Equatable {
       ];
 }
 
-class Ingredient extends Equatable {
-  final String title;
-  final String useBy;
-  final bool isChecked;
 
-  const Ingredient({
-    required this.title,
-    required this.useBy,
-    this.isChecked = false,
-  });
 
-  Ingredient copyWith({bool? isChecked, bool? isEnabled}) => Ingredient(
-        title: title,
-        useBy: useBy,
-        isChecked: isChecked ?? this.isChecked,
-      );
 
-  @override
-  List<Object?> get props => [
-        title,
-        useBy,
-        isChecked,
-      ];
-}
-
-class Recipe extends Equatable {
-  final String title;
-  final List<String> ingredients;
-
-  const Recipe({required this.title, required this.ingredients});
-
-  @override
-  List<Object?> get props => [title, ingredients];
-}

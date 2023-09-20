@@ -1,11 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:tech_task/features/recipe/cubits/models/ingredient.dart';
+import 'package:tech_task/features/recipe/cubits/models/recipe.dart';
+import 'package:tech_task/features/recipe/cubits/recipes_cubit.dart';
+import 'package:tech_task/features/recipe/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/data/models/ingredient_model.dart';
 import 'package:tech_task/features/recipe/data/models/recipe_model.dart';
 import 'package:tech_task/features/recipe/data/repository/recipes_repository.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_cubit.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 
 class MockRepository extends Mock implements RecipesRepository {}
@@ -88,7 +90,7 @@ void main() {
       }),
     );
 
-    blocTest<RecipesCubit, RecipesState>(
+    blocTest(
       'add to selected ingredients',
       build: () => recipesCubit,
       act: (cubit) {
@@ -104,7 +106,7 @@ void main() {
       },
     );
 
-    blocTest<RecipesCubit, RecipesState>(
+    blocTest(
       'remove from selected ingredients',
       build: () => recipesCubit,
       act: (cubit) {

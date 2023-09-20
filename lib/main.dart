@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/ingredients_page.dart';
+
+import 'features/recipe/ui/ingredients_page/ingredients_page.dart';
 
 void main() async {
   await AppInitializer.initGetIt();
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Test',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

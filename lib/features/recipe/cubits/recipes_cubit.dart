@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_task/features/recipe/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/data/models/ingredient_model.dart';
 import 'package:tech_task/features/recipe/data/models/recipe_model.dart';
 import 'package:tech_task/features/recipe/data/repository/recipes_repository.dart';
-import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
+
+import 'models/ingredient.dart';
 
 class RecipesCubit extends Cubit<RecipesState> {
   final RecipesRepository _recipesRepository;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
 import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_cubit.dart';
 import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
@@ -31,7 +32,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime.now(),
+        firstDate: DateTime.parse('1900-01-01'),
         lastDate: DateTime(2100));
 
     if (picked != null && picked != selectedDate) {
@@ -39,6 +40,12 @@ class _IngredientsPageState extends State<IngredientsPage> {
         selectedDate = picked;
       });
     }
+  }
+
+  bool isEnabled(String date) {
+    final ingredientUseByDate = DateFormat('yyyy-MM-dd').parse(date);
+
+    return selectedDate.difference(ingredientUseByDate).inDays <= 0;
   }
 
   @override
@@ -57,10 +64,14 @@ class _IngredientsPageState extends State<IngredientsPage> {
   Widget _buildHomePageBody(BuildContext context, RecipesState state) {
     if (state.getIngredientsStateStatus == StateStatus.loadingState) {
       return Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [CircularProgressIndicator(), Text('Getting ingredients...')],
-      ));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Text('Getting ingredients...'),
+          ],
+        ),
+      );
     }
 
     if (state.getIngredientsStateStatus == StateStatus.failedState) {
@@ -110,18 +121,18 @@ class _IngredientsPageState extends State<IngredientsPage> {
                     title: ingredient?.title ?? '',
                     subTitle: ingredient?.useBy ?? '',
                     isChecked: ingredient?.isChecked ?? false,
-                    onChanged: (checked) {
+                    onChanged: isEnabled(ingredient?.useBy ?? '') ? (checked) {
                       if (checked != null) {
                         late List<Ingredient> selectedIngredient;
-                        if (state.selectedIngredients.isNotEmpty ?? false) {
+                        if (state.selectedIngredients.isNotEmpty) {
                           selectedIngredient =
                               state.selectedIngredients.where((element) {
-                            if ((element.title == ingredient?.title) &&
-                                (element.useBy == ingredient?.useBy)) {
-                              return true;
-                            }
-                            return false;
-                          }).toList();
+                                if ((element.title == ingredient?.title) &&
+                                    (element.useBy == ingredient?.useBy)) {
+                                  return true;
+                                }
+                                return false;
+                              }).toList();
                           print('selectedIngredients: $selectedIngredient');
                         }
                         if (!checked) {
@@ -136,7 +147,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                               ingredient!, checked);
                         }
                       }
-                    },
+                    } : null,
                   );
                 }),
           ),
@@ -170,7 +181,7 @@ class AppListTileCheckBox extends StatelessWidget {
   final String title;
   final String subTitle;
   final bool isChecked;
-  final ValueChanged<bool?> onChanged;
+  final ValueChanged<bool?>? onChanged;
 
   const AppListTileCheckBox({
     Key? key,

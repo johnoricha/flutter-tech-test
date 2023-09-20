@@ -75,7 +75,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
     }
 
     if (state.getIngredientsStateStatus == StateStatus.failedState) {
-      return Center(child: Text('error'));
+      return Center(child: Text('Oops! Something went wrong'));
     }
 
     return Center(
@@ -133,7 +133,6 @@ class _IngredientsPageState extends State<IngredientsPage> {
                                 }
                                 return false;
                               }).toList();
-                          print('selectedIngredients: $selectedIngredient');
                         }
                         if (!checked) {
                           _recipesCubit.toggleIngredientChecked(
@@ -156,7 +155,6 @@ class _IngredientsPageState extends State<IngredientsPage> {
             width: MediaQuery.of(context).size.width,
             child: OutlinedButton(
                 onPressed: () {
-                  print('selected ingredients: ${state.selectedIngredients}');
                   if (state.selectedIngredients.isNotEmpty) {
                     Navigator.push(
                         context,

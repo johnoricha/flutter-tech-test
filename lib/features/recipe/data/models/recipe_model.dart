@@ -13,5 +13,8 @@ class RecipeModel {
   factory RecipeModel.fromJson(Map<String, dynamic> json) =>
       _$RecipeModelFromJson(json);
 
+  Map<String, dynamic> toJson() => _$RecipeModelToJson(this);
+
+
   Recipe toRecipe() => Recipe(title: title, ingredients: ingredients);
 }

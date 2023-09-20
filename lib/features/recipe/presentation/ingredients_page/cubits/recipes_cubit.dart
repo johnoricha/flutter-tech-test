@@ -41,11 +41,9 @@ class RecipesCubit extends Cubit<RecipesState> {
   }
 
   void toggleIngredientChecked(Ingredient ingredient, bool checked) {
-    late Ingredient selectedIngredient;
     final ingredients = state.ingredients?.map((element) {
       if (element == ingredient) {
         element = ingredient.copyWith(isChecked: checked);
-        selectedIngredient = element;
       }
       return element;
     }).toList();

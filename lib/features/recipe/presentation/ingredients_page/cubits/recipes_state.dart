@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:tech_task/features/recipe/data/models/ingredient_model.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 
 class RecipesState extends Equatable {

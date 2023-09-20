@@ -3,19 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
 import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_cubit.dart';
 import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_state.dart';
+import 'package:tech_task/features/recipe/presentation/recipes_page/recipes_page.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 import 'package:tech_task/features/recipe/utils/string_formatter.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+class IngredientsPage extends StatefulWidget {
+  IngredientsPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _IngredientsPageState createState() => _IngredientsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _IngredientsPageState extends State<IngredientsPage> {
   late RecipesCubit _recipesCubit;
   DateTime selectedDate = DateTime.now();
 
@@ -112,16 +113,15 @@ class _HomePageState extends State<HomePage> {
                     onChanged: (checked) {
                       if (checked != null) {
                         late List<Ingredient> selectedIngredient;
-                        if (state.selectedIngredients?.isNotEmpty ?? false) {
-                          selectedIngredient = state.selectedIngredients
-                              ?.where((element) {
-                                if ((element.title == ingredient?.title) &&
-                                    (element.useBy == ingredient?.useBy)) {
-                                  return true;
-                                }
-                                return false;
-                              })
-                              .toList() as List<Ingredient>;
+                        if (state.selectedIngredients.isNotEmpty ?? false) {
+                          selectedIngredient =
+                              state.selectedIngredients.where((element) {
+                            if ((element.title == ingredient?.title) &&
+                                (element.useBy == ingredient?.useBy)) {
+                              return true;
+                            }
+                            return false;
+                          }).toList();
                           print('selectedIngredients: $selectedIngredient');
                         }
                         if (!checked) {
@@ -146,6 +146,17 @@ class _HomePageState extends State<HomePage> {
             child: OutlinedButton(
                 onPressed: () {
                   print('selected ingredients: ${state.selectedIngredients}');
+                  if (state.selectedIngredients.isNotEmpty) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RecipesPage(
+                                ingredients:
+                                    state.selectedIngredients.toList())));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please select ingredients')));
+                  }
                 },
                 child: Text('Get Recipe')),
           )

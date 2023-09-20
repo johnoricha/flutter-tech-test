@@ -4,12 +4,12 @@ import 'package:tech_task/features/recipe/utils/state_status.dart';
 
 class RecipesState extends Equatable {
   final List<Ingredient>? ingredients;
-  final Set<Ingredient>? selectedIngredients;
+  final Set<Ingredient> selectedIngredients;
   final StateStatus? getIngredientsStateStatus;
 
   RecipesState(
       {this.ingredients,
-      this.selectedIngredients,
+      this.selectedIngredients = const {},
       this.getIngredientsStateStatus = StateStatus.initialState});
 
   RecipesState copyWith({

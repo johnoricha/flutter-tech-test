@@ -10,4 +10,7 @@ abstract class RecipesService {
   @GET('/ingredients')
   Future<HttpResponse<dynamic>> getIngredients();
 
+  @GET('/recipes')
+  Future<HttpResponse<dynamic>> getRecipes(
+      @Query('ingredients') String ingredients);
 }

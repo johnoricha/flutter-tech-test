@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_state.dart';
+import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
 
 part 'ingredient_model.g.dart';
 

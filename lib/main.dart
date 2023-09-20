@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_task/features/recipe/di/app_initializer.dart';
-import 'package:tech_task/features/recipe/presentation/home_page/ingredients_page.dart';
+import 'package:tech_task/features/recipe/presentation/ingredients_page/ingredients_page.dart';
 
 void main() async {
   await AppInitializer.initGetIt();

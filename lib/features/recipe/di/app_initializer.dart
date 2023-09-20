@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_cubit.dart';
+import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_cubit.dart';
 
 import '../data/repository/recipes_repository.dart';
 

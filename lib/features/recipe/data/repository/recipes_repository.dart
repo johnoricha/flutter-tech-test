@@ -16,7 +16,6 @@ class RecipesRepository {
       'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   RecipesRepository() {
-    print('repo constructor called');
     _dio.options = BaseOptions(validateStatus: (val) => true);
     _dio.options.headers['Content-Type'] = 'application/json';
     _dio.options.headers['Accept'] = 'application/json';
@@ -34,6 +33,12 @@ class RecipesRepository {
   Future<List<dynamic>> getIngredients() async {
     return ErrorHandler.networkErrorHandler(() {
       return _client.getIngredients();
+    });
+  }
+
+  Future<List<dynamic>> getRecipes(String ingredients) async {
+    return ErrorHandler.networkErrorHandler(() {
+      return _client.getRecipes(ingredients);
     });
   }
 }

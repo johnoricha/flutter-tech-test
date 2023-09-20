@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:tech_task/features/recipe/data/models/ingredient_model.dart';
+import 'package:tech_task/features/recipe/data/models/recipe_model.dart';
 import 'package:tech_task/features/recipe/data/repository/recipes_repository.dart';
-import 'package:tech_task/features/recipe/presentation/home_page/cubits/recipes_state.dart';
+import 'package:tech_task/features/recipe/presentation/ingredients_page/cubits/recipes_state.dart';
 import 'package:tech_task/features/recipe/utils/state_status.dart';
 
 class RecipesCubit extends Cubit<RecipesState> {
@@ -19,15 +19,28 @@ class RecipesCubit extends Cubit<RecipesState> {
         .map((e) => IngredientModel.fromJson(e as Map<String, dynamic>))
         .toList();
 
-    logger.log(Level.debug, 'ingredients:' + ingredients.toString());
-
     emit(state.copyWith(
         ingredients: ingredients.map((e) => e.toIngredient()).toList(),
         getIngredientsStateStatus: StateStatus.successState));
   }
 
+  void getRecipes(List<String> ingredientNames) async {
+    emit(state.copyWith(getRecipesStateStatus: StateStatus.loadingState));
+
+    final ingredients = ingredientNames.join(',');
+
+    final response = await _recipesRepository.getRecipes(ingredients);
+
+    final recipes = response
+        .map((e) => RecipeModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    emit(state.copyWith(
+        recipes: recipes.map((e) => e.toRecipe()).toList(),
+        getRecipesStateStatus: StateStatus.successState));
+  }
+
   void toggleIngredientChecked(Ingredient ingredient, bool checked) {
-    print('checked: $checked');
     late Ingredient selectedIngredient;
     final ingredients = state.ingredients?.map((element) {
       if (element == ingredient) {
@@ -38,26 +51,19 @@ class RecipesCubit extends Cubit<RecipesState> {
     }).toList();
 
     emit(state.copyWith(ingredients: ingredients));
-
-    print('toggleIngredientChecked: ${state.ingredients}');
   }
 
   void addToSelectedIngredients(Ingredient ingredient) {
     Set<Ingredient>? selectedIngredients = state.selectedIngredients;
-    selectedIngredients = {...?state.selectedIngredients, ingredient};
+    selectedIngredients = {...state.selectedIngredients, ingredient};
     emit(state.copyWith(selectedIngredients: selectedIngredients));
 
-    print(
-        'selectedIngredientsChanged: selectedIngre: ${state.selectedIngredients}');
   }
 
   void removeFromSelectedIngredients(Ingredient ingredient) {
     final items =
-        state.selectedIngredients?.where((item) => ingredient != item).toSet();
+        state.selectedIngredients.where((item) => ingredient != item).toSet();
     emit(state.copyWith(selectedIngredients: items));
-    print(
-        'removeFromSelectedIngredients: selectedIngre: ${state.selectedIngredients}');
+
   }
-
-
 }

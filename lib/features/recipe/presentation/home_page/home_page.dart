@@ -49,18 +49,16 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             title: Text(widget.title),
           ),
-          body: buildHomePageBody(context, state)),
+          body: _buildHomePageBody(context, state)),
     );
   }
 
-  Widget buildHomePageBody(BuildContext context, RecipesState state) {
+  Widget _buildHomePageBody(BuildContext context, RecipesState state) {
     if (state.getIngredientsStateStatus == StateStatus.loadingState) {
-      return Center(child: Column(
+      return Center(
+          child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          Text('Getting ingredients...')
-        ],
+        children: [CircularProgressIndicator(), Text('Getting ingredients...')],
       ));
     }
 
@@ -112,8 +110,32 @@ class _HomePageState extends State<HomePage> {
                     subTitle: ingredient?.useBy ?? '',
                     isChecked: ingredient?.isChecked ?? false,
                     onChanged: (checked) {
-                      _recipesCubit.toggleIngredientChecked(
-                          index, checked ?? false);
+                      if (checked != null) {
+                        late List<Ingredient> selectedIngredient;
+                        if (state.selectedIngredients?.isNotEmpty ?? false) {
+                          selectedIngredient = state.selectedIngredients
+                              ?.where((element) {
+                                if ((element.title == ingredient?.title) &&
+                                    (element.useBy == ingredient?.useBy)) {
+                                  return true;
+                                }
+                                return false;
+                              })
+                              .toList() as List<Ingredient>;
+                          print('selectedIngredients: $selectedIngredient');
+                        }
+                        if (!checked) {
+                          _recipesCubit.toggleIngredientChecked(
+                              ingredient!, checked);
+                          _recipesCubit.removeFromSelectedIngredients(
+                              selectedIngredient.first);
+                        } else {
+                          _recipesCubit.addToSelectedIngredients(
+                              ingredient ?? Ingredient(title: '', useBy: ''));
+                          _recipesCubit.toggleIngredientChecked(
+                              ingredient!, checked);
+                        }
+                      }
                     },
                   );
                 }),
@@ -121,7 +143,11 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             width: MediaQuery.of(context).size.width,
-            child: OutlinedButton(onPressed: () {}, child: Text('Get Recipe')),
+            child: OutlinedButton(
+                onPressed: () {
+                  print('selected ingredients: ${state.selectedIngredients}');
+                },
+                child: Text('Get Recipe')),
           )
         ],
       ),

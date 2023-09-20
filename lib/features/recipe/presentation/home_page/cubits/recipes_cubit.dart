@@ -26,14 +26,38 @@ class RecipesCubit extends Cubit<RecipesState> {
         getIngredientsStateStatus: StateStatus.successState));
   }
 
-  void toggleIngredientChecked(int index, bool checked) {
-    final ingredients = state.ingredients?.map((ingredient) {
-      if (index == state.ingredients?.indexOf(ingredient)) {
-        ingredient = ingredient.copyWith(isChecked: checked);
+  void toggleIngredientChecked(Ingredient ingredient, bool checked) {
+    print('checked: $checked');
+    late Ingredient selectedIngredient;
+    final ingredients = state.ingredients?.map((element) {
+      if (element == ingredient) {
+        element = ingredient.copyWith(isChecked: checked);
+        selectedIngredient = element;
       }
-      return ingredient;
+      return element;
     }).toList();
 
     emit(state.copyWith(ingredients: ingredients));
+
+    print('toggleIngredientChecked: ${state.ingredients}');
   }
+
+  void addToSelectedIngredients(Ingredient ingredient) {
+    Set<Ingredient>? selectedIngredients = state.selectedIngredients;
+    selectedIngredients = {...?state.selectedIngredients, ingredient};
+    emit(state.copyWith(selectedIngredients: selectedIngredients));
+
+    print(
+        'selectedIngredientsChanged: selectedIngre: ${state.selectedIngredients}');
+  }
+
+  void removeFromSelectedIngredients(Ingredient ingredient) {
+    final items =
+        state.selectedIngredients?.where((item) => ingredient != item).toSet();
+    emit(state.copyWith(selectedIngredients: items));
+    print(
+        'removeFromSelectedIngredients: selectedIngre: ${state.selectedIngredients}');
+  }
+
+
 }

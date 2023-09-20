@@ -1,5 +1,18 @@
 __Language :__ English | [Bahasa Indonesia](README_ID.md)
 
+## Steps to run
+### Step 1: Run this below command on your terminal (Must be ran on your project root dir)
+```yaml
+flutter clean
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+### Tech Stack
+1. Flutter BLOC with Cubit
+2. Dio with Retrofit
+3. Json Serializable Model using Build Runner
+
 # Mobile Technical Task
 
 Apps for Lunch Recipes Suggestion

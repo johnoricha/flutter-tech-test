@@ -196,7 +196,7 @@ class AppListTileCheckBox extends StatelessWidget {
     return CheckboxListTile(
       value: isChecked,
       title: Text(title),
-      subtitle: Text(subTitle),
+      subtitle: Text('use-by: $subTitle'),
       onChanged: onChanged,
     );
   }
